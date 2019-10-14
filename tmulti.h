@@ -7,6 +7,7 @@
 class TMulti {
 private:
     static bool isBadName(QString name);
+    static QString getTdesktopPath();
 
 public:
     static QList<QString> getSessions();
