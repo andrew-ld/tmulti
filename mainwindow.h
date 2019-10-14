@@ -48,7 +48,6 @@ private:
     void showError(QString text);
     void deleteSelectedItem();
     void addItem(QString text);
-    void launchSession(QString name);
 
     Ui::MainWindow *ui;
     QPushButton *add;

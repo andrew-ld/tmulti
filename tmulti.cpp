@@ -35,6 +35,21 @@ bool TMulti::addSession(QString name) {
     return QDir().mkdir(PATH + name);
 }
 
+bool TMulti::launchSession(QString name) {
+    if (!QFile(TDESKTOP_PATH).exists()) {
+        return false;
+    }
+
+    QProcess *process = new QProcess();
+    QStringList args = {"-many", "-workdir", PATH + name};
+
+    process->setArguments(args);
+    process->setProgram(TDESKTOP_PATH);
+
+    process->startDetached();
+    return true;
+}
+
 bool TMulti::isBadName(QString name) {
     return name.contains(".");
 }

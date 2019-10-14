@@ -13,6 +13,7 @@ public:
     static bool editSession(QString old_name, QString new_name);
     static bool deleteSession(QString name);
     static bool addSession(QString name);
+    static bool launchSession(QString name);
 };
 
 #endif // TMULTI_H
