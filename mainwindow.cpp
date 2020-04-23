@@ -77,21 +77,6 @@ void MainWindow::addItem(QString item) {
     ui->sessions->setFocus();
 }
 
-void MainWindow::launchSession(QString name) {
-    if (!QFile(TDESKTOP_PATH).exists()) {
-        showError(tr("no_tdesktop"));
-        return;
-    }
-
-    QProcess *process = new QProcess(this);
-    QStringList args = {"-many", "-workdir", PATH + name};
-
-    process->setArguments(args);
-    process->setProgram(TDESKTOP_PATH);
-
-    process->startDetached();
-}
-
 /*
  * onClick listener
  */
@@ -101,7 +86,9 @@ void MainWindow::on_start_clicked()
     QString name = getSelectedItem();
     if (name == nullptr) return;
 
-    launchSession(name);
+    if (!TMulti::launchSession(name)) {
+        showError(tr("no_tdesktop"));
+    }
 }
 
 void MainWindow::on_add_clicked()
@@ -110,13 +97,20 @@ void MainWindow::on_add_clicked()
     if (name == "") return;
 
     bool res = TMulti::addSession(name);
-
-    if (res) {
-        addItem(name);
-        launchSession(name);
-    } else {
+    
+    if (!res) {
         showError(tr("creation_err"));
+        return;
     }
+    
+    res = TMulti::launchSession(name);
+    
+    if (!res) {
+        showError(tr("no_tdesktop"));
+        return;
+    }
+    
+   addItem(name);
 }
 
 void MainWindow::on_remove_clicked()
@@ -153,5 +147,7 @@ void MainWindow::on_edit_clicked()
 
 void MainWindow::on_sessions_itemDoubleClicked(QListWidgetItem *item)
 {
-    launchSession(item->text());
+    if (!TMulti::launchSession(item->text())) {
+        showError(tr("no_tdesktop"));
+    }
 }
