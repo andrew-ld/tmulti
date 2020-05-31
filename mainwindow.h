@@ -8,7 +8,7 @@
 #include <QProcess>
 
 
-#define PATH "./.tmulti/"
+#define PATH QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
 
 #if defined(Q_OS_WIN)
 #define TDESKTOP_PATH ".tmulti\\Telegram.exe"
