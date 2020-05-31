@@ -9,7 +9,7 @@
 #include <QStandardPaths>
 
 
-#define PATH QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
+#define PATH QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/"
 
 #if defined(Q_OS_WIN)
 #define TDESKTOP_PATH ".tmulti\\Telegram.exe"
