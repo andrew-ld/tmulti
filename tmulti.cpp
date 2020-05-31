@@ -23,11 +23,13 @@ QList<QString> TMulti::getSessions() {
 bool TMulti::editSession(QString old_name, QString new_name) {
     if (isBadName(new_name)) return false;
 
-    return QDir().rename(PATH + old_name, PATH + new_name);
+    return QDir(PATH).rename(old_name, new_name);
 }
 
 bool TMulti::deleteSession(QString name) {
-    return QDir(PATH + name).removeRecursively();
+    QDir dataDir = QDir(PATH);
+    
+    return QDir(dataDir.absoluteFilePath(name)).removeRecursively();
 }
 
 bool TMulti::addSession(QString name) {
