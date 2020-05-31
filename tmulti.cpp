@@ -33,7 +33,7 @@ bool TMulti::deleteSession(QString name) {
 bool TMulti::addSession(QString name) {
     if (isBadName(name)) return false;
 
-    return QDir().mkpath(PATH + name);
+    return QDir(PATH).mkpath(name);
 }
 
 bool TMulti::launchSession(QString name) {
@@ -42,7 +42,7 @@ bool TMulti::launchSession(QString name) {
     }
 
     QProcess *process = new QProcess();
-    QStringList args = {"-many", "-workdir", PATH + name};
+    QStringList args = {"-many", "-workdir", QDir(PATH).absoluteFilePath(name)};
 
     process->setArguments(args);
     process->setProgram(getTdesktopPath());
