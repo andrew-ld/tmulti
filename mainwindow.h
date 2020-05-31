@@ -6,6 +6,7 @@
 #include <QListWidget>
 #include <QString>
 #include <QProcess>
+#include <QStandardPaths>
 
 
 #define PATH QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
