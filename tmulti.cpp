@@ -3,6 +3,7 @@
 #include <QDirIterator>
 #include <QString>
 #include <QProcessEnvironment>
+#include <QStandardPaths>
 
 #include "tmulti.h"
 #include "mainwindow.h"
@@ -16,17 +17,24 @@ QList<QString> TMulti::getSessions() {
             sessions.removeAll(name);
         }
     }
+    
+    QString defaultSession = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "TelegramDesktop", QStandardPaths::LocateDirectory);
+    
+    if (!defaultSession.isEmpty() && QDir(defaultSession).exists()) {
+        sessions.append("Default Telegram session");
+    }
 
     return sessions;
 }
 
 bool TMulti::editSession(QString old_name, QString new_name) {
-    if (isBadName(new_name)) return false;
+    if (isBadName(new_name) || isBadName(old_name)) return false;
 
     return QDir(PATH).rename(old_name, new_name);
 }
 
 bool TMulti::deleteSession(QString name) {
+    if (isBadName(name)) return false;
     QDir dataDir = QDir(PATH);
     
     return QDir(dataDir.absoluteFilePath(name)).removeRecursively();
@@ -44,9 +52,12 @@ bool TMulti::launchSession(QString name) {
     }
 
     QProcess *process = new QProcess();
-    QStringList args = {"-many", "-workdir", QDir(PATH).absoluteFilePath(name)};
-
-    process->setArguments(args);
+    
+    if (name != "Default Telegram session") {
+        QStringList args = {"-many", "-workdir", QDir(PATH).absoluteFilePath(name)};
+        process->setArguments(args);
+    }
+    
     process->setProgram(getTdesktopPath());
 
     process->startDetached();
@@ -54,7 +65,7 @@ bool TMulti::launchSession(QString name) {
 }
 
 bool TMulti::isBadName(QString name) {
-    return name.contains(".");
+    return name.contains(".") || name.contains("Default Telegram session");
 }
 
 QString TMulti::getTdesktopPath() {
